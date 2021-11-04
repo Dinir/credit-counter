@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<!--
+Customizable CSS
+
+body {
+  background-color: BACKGROUND_COLOR;
+  color: TEXT_COLOR;
+  font-family: FONT;
+}
+.beingUpdated {
+  color: FLASH_COLOR_WHEN_NUMBER_CHANGES;
+}
+.isResetting {
+  color: FLASH_COLOR_WHEN_ABOUT_TO_BE_RESET;
+}
+-->
+
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="author" content="Dinir Nertan">
+  
+  <meta name="viewport" content="width=device-width">
+  
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%; }
+
+    body {
+      overflow: hidden;
+      background: transparent no-repeat;
+      color: black;
+      font-size: 100vh;
+      font-family: monospace;
+      position: relative; }
+      body #counter {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin-left: -0.5em;
+        display: flex;
+        justify-content: right;
+        align-items: center; }
+      body #cover {
+        position: absolute;
+        width: 100%;
+        height: 100%; }
+
+    .notBeingUpdated {
+      transition: color 0.5s, text-shadow 0.5s; }
+
+    .beingUpdated {
+      color: yellow;
+      text-shadow: 0 0 4vh orange;
+      transition: color 0, text-shadow 0; }
+
+    .isResetting {
+      color: red;
+      text-shadow: 0 0 4vh orange; }
+  </style>
+</head>
+
+<body>
+  <div id="counter" class="notBeingUpdated">0</div>
+  <div id="cover"></div>
+</body>
+
+<script src="grabGamepadInfo.js"></script>
+<script>
+  const buttonToTrack = 8
+  const score = {
+    data: 0
+  }
+
+  const scoreDom = {
+    counter: document.getElementById('counter'),
+    cover: document.getElementById('cover'),
+    update: amount => {
+      if (typeof amount !== 'number') { return }
+      score.data += amount
+      if (score.data < 0) { score.data = 0 }
+      scoreDom.counter.innerHTML = score.data
+      scoreDom.counter.classList.replace('notBeingUpdated', 'beingUpdated')
+      setTimeout(
+        () => scoreDom.counter.classList.replace('beingUpdated', 'notBeingUpdated'),
+        16
+      )
+    },
+    reset: () => {
+      scoreDom.update(-1 * score.data)
+      scoreDom.counter.classList.remove('isResetting')
+    }
+  }
+
+  const resetTimer = {
+    timerID: null,
+    interval: 500,
+    timerOn: () => {
+      if (!resetTimer.timerID) {
+        resetTimer.timerID = setTimeout(scoreDom.reset, resetTimer.interval)
+        scoreDom.counter.classList.add('isResetting')
+      }
+    },
+    timerOff: () => {
+      if (resetTimer.timerID >= 0) {
+        clearInterval(resetTimer.timerID)
+        resetTimer.timerID = null
+        scoreDom.counter.classList.remove('isResetting')
+      }
+    }
+  }
+
+  const changeNumber = function (e) {
+    const scrollingUp = e.deltaY < 0
+    switch (scrollingUp) {
+      case true:
+        scoreDom.update(1)
+        break
+      case false:
+        scoreDom.update(-1)
+        break
+    }
+  }
+  const isJustReleased = (() => {
+    let beingPressed = false
+    return beingUpdated => {
+      switch (beingUpdated) {
+        case true:
+          if (!beingPressed) {
+            beingPressed = true
+          }
+          break
+        case false:
+          if (beingPressed) {
+            beingPressed = false
+            return true // is just released
+          }
+          break
+      }
+      return false // is not just released
+    }
+  })()
+
+  handler.update = () => {
+    const buttonState = gamepads[0].buttons[buttonToTrack].pressed
+    const updateNeeded = isJustReleased(buttonState)
+    if (updateNeeded) {
+      scoreDom.update(1)
+    }
+  }
+  rAF(() => handler.refresh(gamepads))
+  scoreDom.cover.addEventListener('wheel', changeNumber)
+  scoreDom.cover.addEventListener('mousedown', resetTimer.timerOn)
+  scoreDom.cover.addEventListener('mouseup', resetTimer.timerOff)
+  scoreDom.cover.addEventListener('mouseleave', resetTimer.timerOff)
+</script>
+
+</html>
