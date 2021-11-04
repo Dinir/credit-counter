@@ -22,9 +22,8 @@ body {
     width: $width;
     height: $height;
     margin-left: -0.1em; // prevents right-side blur cut
-    display: flex;
-    justify-content: right;
-    align-items: center;
+    text-align: right;
+    line-height: 1em;
   }
   #cover {
     position: absolute;
