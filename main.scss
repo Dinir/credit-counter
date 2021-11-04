@@ -21,7 +21,7 @@ body {
     left: 0;
     width: $width;
     height: $height;
-    margin-left: -0.5em; // prevents right-side blur cut
+    margin-left: -0.1em; // prevents right-side blur cut
     display: flex;
     justify-content: right;
     align-items: center;
