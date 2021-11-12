@@ -29,6 +29,7 @@ body {
 
 <body>
   <div id="counter" class="notBeingUpdated">0</div>
+  <div id="converter" class="notBeingUpdated"></div>
   <div id="cover"></div>
 </body>
 
@@ -41,21 +42,30 @@ body {
 
   const scoreDom = {
     counter: document.getElementById('counter'),
+    converter: document.getElementById('converter'),
     cover: document.getElementById('cover'),
+    classListUpdate: (method, ...classNames) => {
+      [
+        scoreDom.counter,
+        scoreDom.converter
+      ].forEach(v => {
+        v.classList[method](...classNames)
+      })
+    },
     update: amount => {
       if (typeof amount !== 'number') { return }
       score.data += amount
       if (score.data < 0) { score.data = 0 }
       scoreDom.counter.innerHTML = score.data
-      scoreDom.counter.classList.replace('notBeingUpdated', 'beingUpdated')
+      scoreDom.classListUpdate('replace', 'notBeingUpdated', 'beingUpdated')
       setTimeout(
-        () => scoreDom.counter.classList.replace('beingUpdated', 'notBeingUpdated'),
+        () => scoreDom.classListUpdate('replace', 'beingUpdated', 'notBeingUpdated'), 
         16
       )
     },
     reset: () => {
       scoreDom.update(-1 * score.data)
-      scoreDom.counter.classList.remove('isResetting')
+      scoreDom.classListUpdate('remove', 'isResetting')
     }
   }
 
@@ -65,14 +75,14 @@ body {
     timerOn: () => {
       if (!resetTimer.timerID) {
         resetTimer.timerID = setTimeout(scoreDom.reset, resetTimer.interval)
-        scoreDom.counter.classList.add('isResetting')
+        scoreDom.classListUpdate('add', 'isResetting')
       }
     },
     timerOff: () => {
       if (resetTimer.timerID >= 0) {
         clearInterval(resetTimer.timerID)
         resetTimer.timerID = null
-        scoreDom.counter.classList.remove('isResetting')
+        scoreDom.classListUpdate('remove', 'isResetting')
       }
     }
   }

@@ -15,20 +15,38 @@ body {
   font-size: $font-size;
   font-family: monospace;
   position: relative;
-  #counter {
+  #counter, #converter {
     position: absolute;
+    width: $width;
+    padding: 0 0.1em; // prevents right-side blur cut
+    line-height: 1em;
+    box-sizing: border-box;
+  }
+  #counter {
     top: 0;
     left: 0;
-    width: $width;
     height: $height;
-    margin-left: -0.1em; // prevents right-side blur cut
     text-align: right;
-    line-height: 1em;
+  }
+  #converter {
+    display: none;
+    top: 50%;
+    text-align: left;
   }
   #cover {
     position: absolute;
     width: 100%;
     height: 100%;
+  }
+
+  &.two-line {
+    font-size: $font-size / 2;
+    #counter, #converter {
+      height: $height / 2;
+    }
+    #converter {
+      display: block;
+    }
   }
 }
 .notBeingUpdated {

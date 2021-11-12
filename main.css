@@ -11,19 +11,38 @@ body {
   font-size: 100vh;
   font-family: monospace;
   position: relative; }
-  body #counter {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    margin-left: -0.1em;
-    text-align: right;
-    line-height: 1em; }
-  body #cover {
-    position: absolute;
-    width: 100%;
-    height: 100%; }
+
+body #counter, body #converter {
+  position: absolute;
+  width: 100%;
+  padding: 0 0.1em;
+  line-height: 1em;
+  box-sizing: border-box; }
+
+body #counter {
+  top: 0;
+  left: 0;
+  height: 100%;
+  text-align: right; }
+
+body #converter {
+  display: none;
+  top: 50%;
+  text-align: left; }
+
+body #cover {
+  position: absolute;
+  width: 100%;
+  height: 100%; }
+
+body.two-line {
+  font-size: 50vh; }
+
+body.two-line #counter, body.two-line #converter {
+  height: 50%; }
+
+body.two-line #converter {
+  display: block; }
 
 .notBeingUpdated {
   transition: color 0.5s, text-shadow 0.5s; }
