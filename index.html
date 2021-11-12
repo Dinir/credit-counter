@@ -63,16 +63,46 @@ body {
   /*
    * expected query parameters:
    * convert=[us|jp|ko]
-   * color=[css-appliable color for text]
    * button=[button index number]
+   * color=[color for text]
+   * flash=[color for flash when updating]
+   * reset=[color for flash when resetting]
+   * shadow=[color for shadow when flashing]
+   *   color can be web recognizable words or hexcode without '#'
+   * font=[font name, can have spaces as '%20']
    */
   const queryMap = getQueryMap()
   let conversionUnit = queryMap.get('convert') || null
   const buttonToTrack = queryMap.get('button') || 8
-  const changeColor = queryMap.has('color')
-    
-  if (changeColor) {
-    document.body.style.setProperty('color', queryMap.get('color'))
+  const newTextColor = queryMap.get('color') || null
+  const newEffectColor = new Map([
+    ['--color-flash', queryMap.get('flash')],
+    ['--color-reset', queryMap.get('reset')],
+    ['--color-active-shadow', queryMap.get('shadow')]
+  ])
+  const changeFont = queryMap.has('font')
+
+  const getHexIfHex = string => {
+    const result = string.match(/[0-9a-f]{6}/)
+    return result ? '#' + result[0] : string
+  }
+
+  if (newTextColor) {
+    document.body.style.setProperty('color', getHexIfHex(newTextColor))
+  }
+  newEffectColor.forEach((color, key) => {
+    if (!color) return
+    document.documentElement.style.setProperty(key, getHexIfHex(color))
+  })
+  if (changeFont) {
+    const fontNameReplacement = {
+      '%20': ' ', '%22': ''
+    }
+    const fontNameRegExp =
+      new RegExp(Object.keys(fontNameReplacement).join('|'),'g')
+    const fontName = queryMap.get('font')
+      .replace(fontNameRegExp, match => fontNameReplacement[match])
+    document.body.style.setProperty('font-family', fontName)
   }
   if (conversionUnit) {
     if (!conversion.hasOwnProperty(conversionUnit)) {

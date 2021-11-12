@@ -2,6 +2,12 @@ $width: 100%;
 $height: 100%;
 $font-size: 100vh;
 
+:root {
+  --color-flash: yellow;
+  --color-reset: red;
+  --color-active-shadow: orange;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -53,11 +59,11 @@ body {
   transition: color 0.5s, text-shadow 0.5s;
 }
 .beingUpdated {
-  color: yellow;
-  text-shadow: 0 0 $font-size * 0.04 orange;
+  color: var(--color-flash);
+  text-shadow: 0 0 $font-size * 0.04 var(--color-active-shadow);
   transition: color 0, text-shadow 0;
 }
 .isResetting {
-  color: red;
-  text-shadow: 0 0 $font-size * 0.04 orange;
+  color: var(--color-reset);
+  text-shadow: 0 0 $font-size * 0.04 var(--color-active-shadow);
 }

@@ -1,3 +1,8 @@
+:root {
+  --color-flash: yellow;
+  --color-reset: red;
+  --color-active-shadow: orange; }
+
 html, body {
   margin: 0;
   padding: 0;
@@ -48,10 +53,10 @@ body.two-line #converter {
   transition: color 0.5s, text-shadow 0.5s; }
 
 .beingUpdated {
-  color: yellow;
-  text-shadow: 0 0 4vh orange;
+  color: var(--color-flash);
+  text-shadow: 0 0 4vh var(--color-active-shadow);
   transition: color 0, text-shadow 0; }
 
 .isResetting {
-  color: red;
-  text-shadow: 0 0 4vh orange; }
+  color: var(--color-reset);
+  text-shadow: 0 0 4vh var(--color-active-shadow); }
