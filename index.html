@@ -203,6 +203,7 @@ body {
     }
   }
   rAF(() => handler.refresh(gamepads))
+  scoreDom.update(0)
   scoreDom.cover.addEventListener('wheel', changeNumber)
   scoreDom.cover.addEventListener('mousedown', resetTimer.timerOn)
   scoreDom.cover.addEventListener('mouseup', resetTimer.timerOff)
